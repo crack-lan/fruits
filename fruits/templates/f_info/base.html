@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					<li><a href="/list{{ type1.id }}_1_1" class="fruit">{{ type1.ttitle }}</a></li>
+			        <li><a href="/list{{ type2.id }}_1_1" class="seafood">{{ type2.ttitle }}</a></li>
+                    <li><a href="/list{{ type3.id }}_1_1" class="meet">{{ type3.ttitle }}</a></li>
+                    <li><a href="/list{{ type4.id }}_1_1" class="egg">{{ type4.ttitle }}</a></li>
+                    <li><a href="/list{{ type5.id }}_1_1" class="vegetables">{{ type5.ttitle }}</a></li>
+                    <li><a href="/list{{ type6.id }}_1_1" class="ice">{{ type6.ttitle }}</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="/index/">首页</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="/index">首页</a>
+		<span>></span>
+		<a href="/list{{ type.id }}_1_1">{{ type.ttitle }}</a>
+        {% if id|default:'' != '' %}
+            <span>></span>
+            <a href="/{{ fruit.id }}">{{ fruit.ftitle|slice:'10' }}...</a>
+        {% endif %}
+	</div>
+    {% block cant %}{% endblock %}
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>精品推荐</h3>
+				<ul>
+					<li>
+						<a href="/{{ adv1.id }}"><img src="/static/{{ adv1.fpic }}"></a>
+						<h4><a href="/{{ adv1.id }}">{{ adv1.ftitle|slice:'10' }}...</a></h4>
+						<div class="prize">￥{{ adv1.fprice }}</div>
+					</li>
+					<li>
+						<a href="/{{ adv2.id }}"><img src="/static/{{ adv2.fpic }}"></a>
+						<h4><a href="/{{ adv2.id }}">{{ adv2.ftitle|slice:'10' }}...</a></h4>
+						<div class="prize">￥{{ adv2.fprice }}</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+        {% block cont %}{% endblock %}
+    </div>
+{% endblock %}

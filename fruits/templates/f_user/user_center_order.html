@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block head %}
+    <script>
+        $(function () {
+            $('.order_list_th').each(function () {
+                if ($(this).attr('id')==0){
+                    if($(this).children('li.col01').attr('id')=='cash'){
+                        $(this).find('#is_pay').text('货到付款');
+                        if($(this).next().attr('id')=='False'){
+                            $(this).next().children().find('#status').text('待发货');
+                            $(this).next().children().find('.oper_btn').text('提醒发货');
+                            num1=$(this).children('li.col01').next().attr('id');
+                            $(this).next().children().find('.oper_btn').click(function () {
+                                $.get('/order/remind/'+num1+'/',function (data) {
+                                    alert(data.ok);
+                                })
+                            });
+                        }
+                        else {
+                            $(this).next().children().find('#status').text('待发货');
+                            $(this).next().children().find('.oper_btn').text('已提醒发货');
+                        }
+                    }
+                    else {
+                        $(this).find('#is_pay').text('未支付');
+                        $(this).next().children().find('#status').text('待付款');
+                        $(this).next().children().find('.oper_btn').text('去付款');
+                        num2=$(this).children('li.col01').next().attr('id');
+                        $(this).next().children().find('.oper_btn').attr('href','/order/pay/'+num2+'/');
+                    }
+
+                }
+                else if ($(this).attr('id')==4){
+                    $(this).find('#is_pay').text('已完成');
+                    $(this).next().children().find('#status').text('订单完成');
+                    $(this).next().children().find('.oper_btn').text('删除订单');
+                    num3=$(this).children('li.col01').next().attr('id');
+                    $(this).next().children().find('.oper_btn').attr('href','/order/del/'+num3+'/');
+                }
+                else if ($(this).attr('id')==5){
+                    $(this).find('#is_pay').text('货到付款');
+                    $(this).next().children().find('#status').text('已发货');
+                    $(this).next().children().find('.oper_btn').text('查看物流');
+                    num4=$(this).children('li.col01').next().attr('id');
+                    $(this).next().children().find('.oper_btn').attr('href','/order/logistics/'+num4+'/');
+                    $(this).next().children().find('.confirm').text('确认收货');
+                    $(this).next().children().find('#con').attr('hidden',false);
+                    $(this).next().children().find('.confirm').click(
+                            function () {
+                                con=confirm('请确认已收到货物?');
+                                if (con){
+                                    $.get('/order/confirm/'+num4+'/',function (data) {
+                                        if(data.ok==1){
+                                            s=confirm('确认收货成功!');
+                                            if(s){
+                                            window.location.href="/user/order/"
+                                            }
+                                        }
+                                        else {
+                                            alert('确认失败,请重试!')
+                                        }
+                                    })
+                                }
+                            }
+                        );
+                }
+                else{
+                    $(this).find('#is_pay').text('已支付');
+                    if ($(this).attr('id')==1){
+                        if($(this).next().attr('id')=='False'){
+                            $(this).next().children().find('#status').text('待发货');
+                            $(this).next().children().find('.oper_btn').text('提醒发货');
+                            num5=$(this).children('li.col01').next().attr('id');
+                            $(this).next().children().find('.oper_btn').click(function () {
+                                $.get('/order/remind/'+num5+'/',function (data) {
+                                    alert(data.ok);
+                                })
+                            });
+                        }
+                        else {
+                            $(this).next().children().find('#status').text('待发货');
+                            $(this).next().children().find('.oper_btn').text('已提醒发货');
+                        }
+                    }
+                    else if ($(this).attr('id')==2){
+                        $(this).next().children().find('#status').text('已发货');
+                        $(this).next().children().find('.oper_btn').text('查看物流');
+                        num6=$(this).children('li.col01').next().attr('id');
+                        $(this).next().children().find('.oper_btn').attr('href','/order/logistics/'+num6+'/');
+                        $(this).next().children().find('.confirm').text('确认收货');
+                        $(this).next().children().find('#con').attr('hidden',false);
+                        $(this).next().children().find('.confirm').click(
+                            function () {
+                                con=confirm('请确认已收到货物?');
+                                if (con){
+                                    $.get('/order/confirm/'+num6+'/',function (data) {
+                                        if(data.ok==1){
+                                            s=confirm('确认收货成功!');
+                                            if(s){
+                                            window.location.href="/user/order/"
+                                            }
+                                        }
+                                        else {
+                                            alert('确认失败,请重试!')
+                                        }
+                                    })
+                                }
+                            }
+                        );
+                    }
+                    else if ($(this).attr('id')==3){
+                        $(this).next().children().find('#status').text('已收货');
+                        $(this).next().children().find('.oper_btn').text('去评价');
+                        num=$(this).children('li.col01').next().attr('id');
+                        $(this).next().children().find('.oper_btn').attr('href','/order/appraise/'+num+'/');
+                    }
+                }
+            })
+        })
+    </script>
+{% endblock head %}
+{% block body %}
+        <div class="right_content clearfix">
+            <h3 class="common_title2">全部订单</h3>
+            {% for order in pages %}
+            <ul class="order_list_th w978 clearfix"  id="{{ order.ostatus }}">
+                <li class="col01" id="{{ order.opaystyle }}">{{ order.odate }}</li>
+                <li class="col02" id="{{ order.onumber }}">订单号：{{ order.onumber }}</li>
+                <li class="col02 stress" id="is_pay"></li>
+            </ul>
+
+            <table class="order_list_table w980" id="{{ order.isRemind }}">
+
+                <tr>
+                    <td width="55%">
+                        {% for detail in order.orderdetail_set.all %}
+                        <ul class="order_goods_list clearfix">
+                            <li class="col01"><img src="/static/{{ detail.fruit.fpic }}"></li>
+                            <li class="col02"><a href="/{{ detail.fruit.id }}/">{{ detail.fruit.ftitle|slice:'6' }}...</a><em>{{ detail.fruit.fprice }}元/{{ detail.fruit.funit }}</em></li>
+                            <li class="col03">{{ detail.count }}</li>
+                            <li class="col04">{{ detail.price }}元</li>
+                        </ul>
+                        {% endfor %}
+                    </td>
+                    <td width="15%">{{ order.ototal }}元</td>
+                    <td width="15%" id="status"></td>
+                    <td width="15%"><a href="#" class="oper_btn"></a></td>
+                    <td width="15%" id="con" hidden><a href="#" class="confirm"></a></td>
+                </tr>
+
+            </table>
+            {% endfor %}
+
+            <div class="pagenation">
+                {% if pages.has_previous %}
+                <a href="/user/order/{{ pages.previous_page_number }}"><上一页</a>
+                {% endif %}
+                {% for fpage in paginator.page_range %}
+                {% if fpage == pages.number %}
+                <a href="#" class="active">{{ fpage }}</a>
+                {% else %}
+                <a href="/user/order/{{ fpage }}">{{ fpage }}</a>
+                {% endif %}
+                {% endfor %}
+                {% if pages.has_next %}
+                <a href="/user/order/{{ pages.next_page_number }}">下一页></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}

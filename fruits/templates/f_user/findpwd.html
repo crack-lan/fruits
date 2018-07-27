@@ -1,0 +1,159 @@
+{% extends 'base_bottom.html' %}
+
+{% block head %}
+	<script>
+        $(function(){
+            var error_name = false;
+            var error_password = false;
+            var error_check_password = false;
+            var error_email = false;
+            $('#user_name').blur(function() {
+                check_user_name();
+            });
+            $('#pwd').blur(function() {
+                check_pwd();
+            });
+            $('#cpwd').blur(function() {
+                check_cpwd();
+            });
+            $('#email').blur(function() {
+                check_email();
+            });
+            function check_user_name(){
+                var len = $('#user_name').val().length;
+                if(len<5||len>20)
+                {
+                    $('#user_name').next().html('请输入5-20个字符的用户名')
+                    $('#user_name').next().show();
+                    error_name = true;
+                }
+                else
+                {
+                    $('#user_name').next().hide();
+                    error_name = false;
+                }
+            }
+            function check_pwd(){
+                var len = $('#pwd').val().length;
+                if(len<8||len>20)
+                {
+                    $('#pwd').next().html('密码最少8位，最长20位')
+                    $('#pwd').next().show();
+                    error_password = true;
+                }
+                else
+                {
+                    $('#pwd').next().hide();
+                    error_password = false;
+                }
+            }
+            function check_cpwd(){
+                var pass = $('#pwd').val();
+                var cpass = $('#cpwd').val();
+
+                if(pass!=cpass)
+                {
+                    $('#cpwd').next().html('两次输入的密码不一致')
+                    $('#cpwd').next().show();
+                    error_check_password = true;
+                }
+                else
+                {
+                    $('#cpwd').next().hide();
+                    error_check_password = false;
+                }
+            }
+            function check_email(){
+                var re = /^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$/;
+
+                if(re.test($('#email').val()))
+                {
+                    $('#email').next().hide();
+                    error_email = false;
+                }
+                else
+                {
+                    $('#email').next().html('你输入的邮箱格式不正确')
+                    $('#email').next().show();
+                    error_email = true;
+                }
+
+            }
+
+
+            $('.reg_sub').click(function() {
+                check_user_name();
+                check_pwd();
+                check_cpwd();
+                check_email();
+                if(error_name == false && error_password == false && error_check_password == false && error_email == false )
+                {
+                    $.post('/user/resetpwd/',{'user':$('#user_name').val(),'newpwd':$('#pwd').val(),'email':$('#email').val()},function (data) {
+                        if (data.ok==0){
+                            alert('用户名不存在！')
+                        }
+                        else {
+                            if (data.ok==1){
+                                alert('该用户名注册邮箱不正确！')
+                            }
+                            else {
+                                if(confirm('重置密码成功！将前往登录页面。。。')){
+                                    window.location.href='/user/login/'
+                                }
+                            }
+                        }
+                    })
+                }
+            });
+        })
+    </script>
+{% endblock head %}
+
+
+{% block body %}
+	<div class="register_con">
+		<div class="l_con fl">
+			<a class="reg_logo"><img src="/static/images/logo02.png" width="150" height="90"></a>
+			<div class="reg_slogan">仰望星空  ·  品尝最美味</div>
+			<div class="reg_banner"></div>
+		</div>
+
+		<div class="r_con fr">
+			<div class="reg_title clearfix">
+				<h1>找回密码</h1>
+				<a href="/user/login">登录</a>
+			</div>
+			<div class="reg_form clearfix">
+				<form id="reg_form">
+				<ul>
+					<li>
+						<label>用户名:</label>
+						<input type="text" name="user_name" id="user_name">
+						<span class="error_tip">提示信息</span>
+					</li>					
+					<li>
+						<label>新密码:</label>
+						<input type="password" name="pwd" id="pwd">
+						<span class="error_tip">提示信息</span>
+					</li>
+					<li>
+						<label>确认密码:</label>
+						<input type="password" name="cpwd" id="cpwd">
+						<span class="error_tip">提示信息</span>
+					</li>
+					<li>
+						<label>注册邮箱:</label>
+						<input type="text" name="email" id="email">
+                        <span class="error_tip">提示信息</span>
+					</li>
+					<li class="reg_sub">
+						<input type="button" value="设置新密码" name="">
+					</li>
+				</ul>				
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+{% endblock body %}

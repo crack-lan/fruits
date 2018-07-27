@@ -1,0 +1,78 @@
+{% extends 'f_info/base.html' %}
+
+{% block cont %}
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="/list{{ type.id }}_1_1"{% if sort == '1' %} class="active" {% endif %}>默认</a>
+				<a href="/list{{ type.id }}_2_1"{% if sort == '2' %} class="active" {% endif %}>价格</a>
+				<a href="/list{{ type.id }}_3_1"{% if sort == '3' %} class="active" {% endif %}>人气</a>
+			</div>
+
+			<ul class="goods_type_list clearfix">
+                {% for fruit in pages %}
+				<li>
+					<a href="/{{ fruit.id }}" id="f_id"><img src="/static/{{ fruit.fpic }}"></a>
+					<h4><a href="/{{ fruit.id }}">{{fruit.ftitle}}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{ fruit.fprice }}</span>
+						<span class="unit">{{ fruit.fprice }}/{{ fruit.funit }}</span>
+						<a href="javascript:;" class="add_goods" id="add_cart" title="加入购物车"></a>
+					</div>
+				</li>
+                {% endfor %}
+
+
+			</ul>
+
+			<div class="pagenation">
+                {% if pages.has_previous %}
+				<a href="/list{{ type.id }}_{{ sort }}_{{ pages.previous_page_number }}"><上一页</a>
+                {% endif %}
+                {% for fpage in paginator.page_range %}
+                {% if fpage == pages.number %}
+				<a href="#" class="active">{{ fpage }}</a>
+				{% else %}
+                <a href="/list{{ type.id }}_{{ sort }}_{{ fpage }}">{{ fpage }}</a>
+                {% endif %}
+                {% endfor %}
+				{% if pages.has_next %}
+                <a href="/list{{ type.id }}_{{ sort }}_{{ pages.next_page_number }}">下一页></a>
+                {% endif %}
+			</div>
+		</div>
+	</div>
+    <div class="add_jump"></div>
+      <script type="text/javascript">
+
+        var $add_X=$('#add_cart').offset().top;
+        var $add_y=$('#add_cart').offset().left;
+
+        var $to_x=$('#show_count').offset().top;
+        var $to_y=$('#show_count').offset().left;
+        $('.add_jump').css({'left':$add_y+10,'top':$add_X,'display':'none'});
+        $('#add_cart').click(function () {
+            if($('.login_btn').text().indexOf('登录')>=0) {
+                alert('请先登录!');
+                location.href = '/user/login/';
+                return;
+            };
+            $('.add_jump').css({'display':'block'});
+            $('.add_jump').stop().animate({
+                'left':$to_y+7,
+                'top':$to_x+7},
+                'fast',function () {
+                    $('.add_jump').fadeOut('fast',function () {});
+                });
+            var ids=$('#f_id').attr('href').slice(1);
+            $.get('/cart/add'+ids+'_1/',function (data) {
+                $('#show_count').text(data.count);
+            });
+            setTimeout(function () {
+                $('.add_jump').css({'left':$add_y+10,'top':$add_X,'display':'none'});
+            },1000)
+        });
+
+
+    </script>
+
+{% endblock cont%}

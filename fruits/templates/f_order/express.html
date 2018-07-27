@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+
+    <div class="express">
+		<table width="100%">
+            {% for express in data %}
+            <tr>
+                <td>{{ express.time }}</td>
+                <td>{{ express.context }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock body %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block body %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部搜索结果</h1>
+            </div>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="/index">首页</a>
+		<span>></span>
+		<a href='#'>搜索结果</a>
+	</div>
+	<div class="main_wrap clearfix">
+
+        <div class="r_wrap fr clearfix">
+
+			<ul class="goods_type_list clearfix">
+            {% if page %}
+                {% for result in page.object_list %}
+				<li>
+					<a href="/{{ result.object.id }}/" id="f_id"><img src="/static/{{ result.object.fpic }}"></a>
+					<h4><a href="/{{ result.object.id }}">{{result.object.ftitle}}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{ result.object.fprice }}</span>
+						<span class="unit">{{ result.object.fprice }}/{{ result.object.funit }}</span>
+						<a href="javascript:;" class="add_goods" id="add_cart" title="加入购物车"></a>
+					</div>
+				</li>
+                {% endfor %}
+            {% else %}
+                <li>您所搜索商品暂无,敬请期待!</li>
+            {% endif %}
+			</ul>
+
+
+			<div class="pagenation">
+                {% if pages.has_previous %}
+				<a href="/search/?q={{ query }}&amp;page={{ page.previous_page_number }}"><上一页</a>
+                {% endif %}
+                {% for fpage in paginator.page_range %}
+                {% if fpage == pages.number %}
+				<a href="#" class="active">{{ fpage }}</a>
+				{% else %}
+                <a href="/search/?q={{ query }}&amp;page={{ fpage }}">{{ fpage }}</a>
+                {% endif %}
+                {% endfor %}
+				{% if pages.has_next %}
+                <a href="/search/?q={{ query }}&amp;page={{ page.next_page_number }}">下一页></a>
+                {% endif %}
+			</div>
+		</div>
+	</div>
+    <div class="add_jump"></div>
+      <script type="text/javascript">
+
+        var $add_X=$('#add_cart').offset().top;
+        var $add_y=$('#add_cart').offset().left;
+
+        var $to_x=$('#show_count').offset().top;
+        var $to_y=$('#show_count').offset().left;
+        $('.add_jump').css({'left':$add_y+10,'top':$add_X,'display':'none'});
+        $('#add_cart').click(function () {
+            if($('.login_btn').text().indexOf('登录')>=0) {
+                alert('请先登录!');
+                location.href = '/user/login/';
+                return;
+            };
+            $('.add_jump').css({'display':'block'});
+            $('.add_jump').stop().animate({
+                'left':$to_y+7,
+                'top':$to_x+7},
+                'fast',function () {
+                    $('.add_jump').fadeOut('fast',function () {});
+                });
+            var ids=$('#f_id').attr('href').slice(1);
+            $.get('/cart/add'+ids+'_1/',function (data) {
+                $('#show_count').text(data.count);
+            });
+            setTimeout(function () {
+                $('.add_jump').css({'left':$add_y+10,'top':$add_X,'display':'none'});
+            },1000)
+        });
+
+
+    </script>
+{% endblock body %}
+

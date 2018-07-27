@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block head %}
+	<script type="text/javascript" src="/static/js/slide.js"></script>
+{% endblock %}
+{% block body %}
+    <div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+			<ul class="navlist fl">
+				<li><a href="/index/">首页</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+			<li><a href="#model01" class="fruit">{{ type1.ttitle }}</a></li>
+			<li><a href="#model02" class="seafood">{{ type2.ttitle }}</a></li>
+			<li><a href="#model03" class="meet">{{ type3.ttitle }}</a></li>
+			<li><a href="#model04" class="egg">{{ type4.ttitle }}</a></li>
+			<li><a href="#model05" class="vegetables">{{ type5.ttitle }}</a></li>
+			<li><a href="#model06" class="ice">{{ type6.ttitle }}</a></li>
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+                {% for advice in rec %}
+				<li><a href="/{{ advice.id }}"><img src="/static/{{ advice.fpic }}" alt="幻灯片" width="760px" height="270"></a></li>
+                {% endfor %}
+
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+			<a href="/{{ adv1.id }}"><img src="/static/{{ adv1.fpic }}" width="240" height="135"></a>
+			<a href="/{{ adv2.id }}"><img src="/static/{{ adv2.fpic }}" width="240" height="135"></a>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model01">{{ type1 }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fnew in new1 %}
+                    <a href="/{{ fnew.id }}">{{ fnew.ftitle|slice:'10' }}...</a>
+                {% endfor %}
+			</div>
+			<a href="/list{{ type1.id }}_1_1" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner01.jpg"></div>
+			<ul class="goods_list fl">
+               {% for fhot in hot1 %}
+				<li>
+					<h4><a href="/{{ fhot.id }}">{{ fhot.ftitle }}...</a></h4>
+					<a href="/{{ fhot.id }}"><img src="/static/{{ fhot.fpic }}"></a>
+					<div class="prize">¥ {{ fhot.fprice }}</div>
+				</li>
+                {% endfor %}
+
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model02">{{ type2 }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fnew in new2 %}
+                    <a href="/{{ fnew.id }}">{{ fnew.ftitle|slice:'10' }}...</a>
+                {% endfor %}
+			</div>
+			<a href="/list{{ type2.id }}_1_1" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner02.jpg"></div>
+			<ul class="goods_list fl">
+				{% for fhot in hot2 %}
+				<li>
+					<h4><a href="/{{ fhot.id }}">{{ fhot.ftitle }}...</a></h4>
+					<a href="/{{ fhot.id }}"><img src="/static/{{ fhot.fpic }}"></a>
+					<div class="prize">¥ {{ fhot.fprice }}</div>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model03">{{ type3 }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fnew in new3 %}
+                    <a href="/{{ fnew.id }}">{{ fnew.ftitle|slice:'10' }}...</a>
+                {% endfor %}
+			</div>
+			<a href="/list{{ type3.id }}_1_1" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner03.jpg"></div>
+			<ul class="goods_list fl">
+				{% for fhot in hot3 %}
+				<li>
+					<h4><a href="/{{ fhot.id }}">{{ fhot.ftitle }}...</a></h4>
+					<a href="/{{ fhot.id }}"><img src="/static/{{ fhot.fpic }}"></a>
+					<div class="prize">¥ {{ fhot.fprice }}</div>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model04">{{ type4 }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fnew in new4 %}
+                    <a href="/{{ fnew.id }}">{{ fnew.ftitle|slice:'10' }}...</a>
+                {% endfor %}
+			</div>
+			<a href="/list{{ type4.id }}_1_1" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner04.jpg"></div>
+			<ul class="goods_list fl">
+				{% for fhot in hot4 %}
+				<li>
+					<h4><a href="/{{ fhot.id }}">{{ fhot.ftitle }}...</a></h4>
+					<a href="/{{ fhot.id }}"><img src="/static/{{ fhot.fpic }}"></a>
+					<div class="prize">¥ {{ fhot.fprice }}</div>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model05">{{ type5 }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fnew in new5 %}
+                    <a href="/{{ fnew.id }}">{{ fnew.ftitle|slice:'10' }}...</a>
+                {% endfor %}
+			</div>
+			<a href="/list{{ type5.id }}_1_1" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner05.jpg"></div>
+			<ul class="goods_list fl">
+				{% for fhot in hot5 %}
+				<li>
+					<h4><a href="/{{ fhot.id }}">{{ fhot.ftitle }}...</a></h4>
+					<a href="/{{ fhot.id }}"><img src="/static/{{ fhot.fpic }}"></a>
+					<div class="prize">¥ {{ fhot.fprice }}</div>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model06">{{ type6 }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fnew in new6 %}
+                    <a href="/{{ fnew.id }}">{{ fnew.ftitle|slice:'10' }}...</a>
+                {% endfor %}
+			</div>
+			<a href="/list{{ type6.id }}_1_1" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner06.jpg"></div>
+			<ul class="goods_list fl">
+				{% for fhot in hot6 %}
+				<li>
+					<h4><a href="/{{ fhot.id }}">{{ fhot.ftitle }}...</a></h4>
+					<a href="/{{ fhot.id }}"><img src="/static/{{ fhot.fpic }}"></a>
+					<div class="prize">¥ {{ fhot.fprice }}</div>
+				</li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+{% endblock %}

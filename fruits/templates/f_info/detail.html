@@ -1,0 +1,125 @@
+{% extends 'f_info/base.html' %}
+{% block head %}
+    <script>
+        function add(){
+            num=parseFloat($('.num_show').val());
+            $('.num_show').val(num+1);
+            $('.num_show').blur();
+        }
+        function sub(){
+            sum=parseFloat($('.num_show').val());
+            $('.num_show').val(sum-1);
+            $('.num_show').blur();
+        }
+        $(function (){
+            $('.detail_tab li').click(function () {
+                $(this).siblings('li').removeClass("active");
+                $(this).addClass("active");
+                if($(this).text()=='商品介绍'){
+                    $('.tab_content').prop('hidden',false);
+                    $('.right_content').prop('hidden',true)
+                }
+                else {
+                    $('.tab_content').prop('hidden',true);
+                    $('.right_content').prop('hidden',false)
+                }
+            });
+
+            $('.num_show').blur(function(){
+                num=parseFloat($('.num_show').val());
+                price=parseFloat($('#price').text());
+                total=num*price;
+                $('#total').text(total.toFixed(2)+'元');
+                hrefss='/cart/add'+$('.add_cart').attr('id')+'_'+$('.num_show').val();
+                $('.add_cart').attr('href',hrefss);
+            });
+            $('.buy_btn').click(function () {
+                $.get('/cart/add'+$('.add_cart').attr('id')+'_1',function () {
+                    window.location.href='/order/place'+$('.add_cart').attr('id')+'_'+$('.num_show').val()
+                })
+            });
+
+        });
+    </script>
+{% endblock %}
+{% block cant %}
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl"><img src="/static/{{ fruit.fpic }}" width="300"></div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{ fruit.ftitle }}</h3>
+			<p>{{ fruit.fabstract }}</p>
+			<div class="price_bar">
+				<span class="show_price">¥<em id="price">{{ fruit.fprice }}</em></span>
+				<span class="show_unit">单  位：{{ fruit.funit }}</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" value="1">
+					<a href="javascript:add();" class="add fr">+</a>
+					<a href="javascript:sub();" class="minus fr">-</a>
+				</div> 
+			</div>
+			<div class="total">总价：<em id="total">{{ fruit.fprice }}元</em></div>
+			<div class="operate_btn">
+				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="/cart/add{{ fruit.id }}_1" class="add_cart" id="{{ fruit.id }}">加入购物车</a>
+			</div>
+		</div>
+	</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active"><a href="javascript:;">商品介绍</a></li>
+				<li><a href="javascript:;">评论</a></li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>商品详情：</dt>
+					<dd>{{ fruit.fdetail|safe }} </dd>
+				</dl>
+			</div>
+            <div class="right_content clearfix"  hidden>
+            {% for evalue in pages %}
+            <ul class="order_list_th w978 clearfix">
+                <li class="col01">评论日期：{{ evalue.date}}</li>
+                <li class="col02">用户名：{{ evalue.euser.uid|slice:'5' }}***</li>
+                <li class="col02 stress" id="{{ evalue.star}}"><img src=""></li>
+            </ul>
+
+            <table class="order_list_table1 w980">
+
+                <tr>
+                    <td width="100%">
+                        <ul class="order_goods_list1 clearfix">
+                            <li>{{ evalue.value}}</li>
+                        </ul>
+                    </td>
+                </tr>
+
+            </table>
+            {% endfor %}
+
+            <div class="pagenation">
+                {% if pages.has_previous %}
+                <a href="/{{ fruit.id }}/{{ pages.previous_page_number }}"><上一页</a>
+                {% endif %}
+                {% for fpage in paginator.page_range %}
+                {% if fpage == pages.number %}
+                <a href="#" class="active">{{ fpage }}</a>
+                {% else %}
+                <a href="/{{ fruit.id }}/{{ fpage }}">{{ fpage }}</a>
+                {% endif %}
+                {% endfor %}
+                {% if pages.has_next %}
+                <a href="/{{ fruit.id }}/{{ pages.next_page_number }}">下一页></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+		</div>
+	</div>
+{% endblock cant %}

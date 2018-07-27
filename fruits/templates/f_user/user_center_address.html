@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block body %}
+		<div class="right_content clearfix">
+            <div class="total_count">收货地址:</div>
+                <table  width="700" >
+                    <tr>
+                        <th height="50">收货人</th>
+                        <th height="50">详细地址</th>
+                        <th height="50">电话</th>
+                    </tr>
+                    {% for add in adds %}
+                    <tr>
+                        <td align="center" height="50">{{ add.dname }}</td>
+                        <td align="center" height="50">{{ add.daddress}}</td>
+                        <td align="center" height="50">{{ add.dphone}}</td>
+                        <td align="center" height="50"><a href="/user/address/del?address={{ add.id }}">删除</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+
+				<h3 class="common_title2">添加地址:</h3>
+				<div class="site_con">
+					<form method="post" action="/user/address_add/">
+                        {% csrf_token %}
+						<div class="form_group">
+							<label>收件人：</label>
+							<input type="text" name="re_name">
+						</div>
+						<div class="form_group form_group2">
+							<label>详细地址：</label>
+							<textarea class="site_area" name="detail_add"></textarea>
+						</div>
+						<div class="form_group">
+							<label>手机：</label>
+							<input type="text" name="phone_num">
+						</div>
+
+						<input type="submit" name="" value="提交" class="info_submit">
+					</form>
+				</div>
+		</div>
+	</div>
+
+{% endblock body %}

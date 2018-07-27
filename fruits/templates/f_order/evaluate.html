@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block head %}
+    <script>
+        $(function () {
+            var text_error=false;
+            $('#text').blur(function() {
+		        check();
+	        });
+            function check() {
+                var len=$('#text').val().length;
+                if (len<10||len>150) {
+                    $('.error_tip').html('请填写10-150字以内评价内容!').show();
+                    text_error = false;
+                }
+                else {
+                    $('.error_tip').hide()
+                    text_error = true;
+                }
+            }
+            $('#evaluate').submit(function () {
+                check();
+                if(text_error){
+                    alert('评价成功！即将前往我的订单页面。。。')
+                    return true
+                }
+                else {
+                    return false
+                }
+            })
+        })
+    </script>
+{% endblock head %}
+{% block body %}
+    {% for fruit in fruits %}
+        <h3 class="value_title">商品名称：{{ fruit.fruit.ftitle }}</h3>
+        <h3 class="common_title">评价分数</h3>
+        <form action="/order/evaluate/" method="post" id="evaluate">
+        {% csrf_token %}
+            <div class="common_list_con clearfix">
+                <div class="star_style_con clearfix">
+                    <input type="radio" name="evalue{{ fruit.fruit.id }}" value="5" checked>
+                    <a href="" class="star"><img src="/static/images/star5.png" width="100" >5分&nbsp&nbsp</a>
+                    <input type="radio" name="evalue{{ fruit.fruit.id }}" value="4">
+                    <a href="" class="star"><img src="/static/images/star4.png" width="100" >4分&nbsp&nbsp</a>
+                    <input type="radio" name="evalue{{ fruit.fruit.id }}" value="3">
+                    <a href="" class="star"><img src="/static/images/star3.png" width="100" >3分&nbsp&nbsp</a>
+                    <input type="radio" name="evalue{{ fruit.fruit.id }}" value="2">
+                    <a href="" class="star"><img src="/static/images/star2.png" width="100" >2分&nbsp&nbsp</a>
+                    <input type="radio" name="evalue{{ fruit.fruit.id }}" value="1">
+                    <a href="" class="star"><img src="/static/images/star1.png" width="100" >1分</a>
+                </div>
+            </div>
+            <h3 class="common_title">评价内容</h3>
+            <div class="common_list_con clearfix">
+                <textarea id="text" name="text{{ fruit.fruit.id }}" cols="100" rows="10" placeholder="请在此处输入10-150字以内评价内容"></textarea>
+                <span class="error_tip">提示信息</span>
+            </div>
+
+
+    {% endfor %}
+            <div class="common_list_con clearfix">
+                <input type="text" value="{{onum}}" name="onum" hidden>
+                <input type="submit" class="evalue" value="提交评价">
+            </div>
+        </form>
+
+{% endblock body %}

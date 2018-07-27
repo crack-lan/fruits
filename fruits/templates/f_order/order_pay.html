@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block head %}
+
+    <script>
+        $(function () {
+            $('#order_btn2').click(function () {
+                $.get('/order/pay/'+$('.common_list_con').attr('id')+'/',function (data) {
+                    if(data.ok==1){
+                        alert('支付成功!将跳转至订单详情页...')
+                    }
+                    else{
+                        alert('支付失败!请重新支付...')
+                    }
+                })
+            });
+            pay=$('select').attr('id');
+            $('option').each(function () {
+                if($(this).attr('value')==pay){
+                    $(this).prop('selected',true)
+                }
+            });
+            $('select').change(function () {
+                $(this).find('option').each(
+                    function () {
+                        if ($(this).prop('selected')){
+                            pay_style=$(this).attr('value')
+                        }
+                    }
+                );
+                onum=$('.common_list_con').attr('id');
+                $.post('/order/change_pay/',{'pay_style':pay_style,'onum':onum},function (data) {
+                    if (data.ok==0){
+                        $('option'[value='pay']).prop('selected',true)
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock head %}
+{% block body %}
+
+    <h3 class="common_title">订单信息</h3>
+
+	<div class="common_list_con clearfix" id="{{ order.onumber }}">
+		<table width="100%">
+            <tr>
+                <th>用户名</th>
+                <th>订单编号</th>
+                <th>应付金额</th>
+                <th>下单时间</th>
+                <th>支付方式</th>
+            </tr>
+            <tr>
+                <td>{{ order.ouser.uid }}</td>
+                <td>{{ order.onumber }}</td>
+                <td>{{ order.ototal }}元</td>
+                <td>{{ order.odate }}</td>
+                <td><select id="{{ order.opaystyle }}">
+                        <option value="weixin">微信支付</option>
+                        <option value="zhifubao">支付宝付款</option>
+                        <option value="bank">银行卡支付</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+	</div>
+    <div class="order_submit clearfix">
+        <form method="post" action="/order/pay/">
+            {% csrf_token %}
+            <input type="text" name="onums" value="{{ order.onumber }}" hidden>
+            <a href="/user/order/" id="order_btn">查看订单</a>
+            <br>
+            <br>
+            <br>
+            <input type="submit" id="order_btn2" value="确认支付">
+        </form>
+
+	</div>
+{% endblock body %}

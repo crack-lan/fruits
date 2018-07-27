@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block body %}
+		<div class="right_content clearfix">
+            <div class="info_con clearfix">
+            <h3 class="common_title2">基本信息</h3>
+                    <ul class="user_info_list">
+                        <li><span>用户名：</span>{{ info.uid }}</li>
+                        <li><span>邮箱地址：</span>{{ info.uemail }}</li>
+                    </ul>
+            </div>
+
+            <h3 class="common_title2">最近浏览</h3>
+            <div class="has_view_list">
+                <ul class="goods_type_list clearfix">
+
+                    {% for fruit in fruits %}
+				<li>
+					<a href="/{{ fruit.id }}"><img src="/static/{{ fruit.fpic }}"></a>
+					<h4><a href="/{{ fruit.id }}">{{ fruit.ftitle }}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{ fruit.fprice }}</span>
+						<span class="unit">{{ fruit.fprice }}/{{ fruit.funit }}</span>
+					</div>
+				</li>
+                    {% endfor %}
+
+
+			    </ul>
+		    </div>
+
+
+		    </div>
+	</div>
+
+
+{% endblock body %}
